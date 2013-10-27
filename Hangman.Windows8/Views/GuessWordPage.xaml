@@ -1,0 +1,241 @@
+﻿<Page
+    x:Class="Hangman.Windows8.Views.GuessWordPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Hangman.Windows8.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ViewModels="using:Hangman.Windows8.ViewModels"
+    mc:Ignorable="d">
+
+    <Page.DataContext>
+        <ViewModels:GuessWordViewModel/>
+    </Page.DataContext>
+
+    <Page.BottomAppBar>
+        <AppBar Height="100">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                    <ListView x:Name="AppBarCategoriesLV" 
+                              Padding="0"
+                              ItemsSource="{Binding Categories}" 
+                              SelectedItem="{Binding SelectedCategory,Mode=TwoWay}"
+                              SelectionMode="None"
+                              HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center" 
+                              HorizontalAlignment="Center" 
+                              VerticalAlignment="Center" 
+                              Height="60" 
+                              ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center" 
+                                            Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Button Margin="0"
+                                        Content="{Binding Title}"
+                                        Command="{Binding ElementName=AppBarCategoriesLV, Path=DataContext.ChooseCategoryCommand}"
+                                        CommandParameter="{Binding Title}" 
+                                        HorizontalAlignment="Center" 
+                                        Height="50"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </Grid>
+        </AppBar>
+    </Page.BottomAppBar>
+
+    <ScrollViewer ZoomMode="Disabled" 
+                  HorizontalScrollMode="Disabled"
+                  VerticalScrollMode="Disabled"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Disabled">
+        <Grid x:Name="LayoutRoot" 
+              Margin="0,0,0,-0" 
+              Visibility="Visible">
+            <Grid x:Name="landscapeContent" 
+                  Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel x:Name="headerSP" 
+                            Grid.Column="1" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Bottom" >
+                    <TextBlock x:Name="headerTB" 
+                               TextWrapping="Wrap" 
+                               Text="Бесеница" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center" 
+                               Style="{StaticResource HeaderTextStyle}" 
+                               Margin="0,0,50,0"/>
+                    <TextBlock Text="Общо познати думи:"
+                               Margin="50,0,10,0"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Style="{StaticResource SubheaderTextStyle}" />
+                    <TextBlock x:Name="guessedwordsTB" Text="{Binding TotalGuessedWords}"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Style="{StaticResource SubheaderTextStyle}"  />
+                </StackPanel>
+
+                <StackPanel x:Name="containerSP" 
+                            Grid.Row="1" 
+                            Grid.Column="1" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center">
+
+                    <StackPanel x:Name="selectedcategorySP" 
+                                Orientation="Horizontal" 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" 
+                                Margin="20">
+                        <TextBlock Text="Категория: " 
+                                   Style="{StaticResource SubheaderTextStyle}" 
+                                   Margin="0,0,20,0" />
+                        <TextBlock TextWrapping="Wrap" 
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center" 
+                                   Style="{StaticResource SubheaderTextStyle}"
+                                   Text="{Binding SelectedCategory.Title, Mode=TwoWay}"/>
+                    </StackPanel>
+
+                    <StackPanel x:Name="mysterywordSP" 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center"
+                                Height="40">
+                        <ItemsControl ItemsSource="{Binding MysteryWordChars}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VariableSizedWrapGrid Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Width="50"
+                                        Height="50" 
+                                        FontSize="30"
+                                        Padding="0"
+                                        Content="{Binding}" 
+                                        Background="White" 
+                                        Foreground="Black" 
+                                        BorderBrush="#7F000000" 
+                                        HorizontalAlignment="Stretch" 
+                                        ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                                        VerticalAlignment="Stretch" VerticalContentAlignment="Bottom" 
+                                        Margin="-5" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <StackPanel x:Name="gamefieldSP" 
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <StackPanel x:Name="imageSP" 
+                                    Width="450" 
+                                    Height="350"
+                                    Margin="0,25,0,25">
+                            <Image Width="350" 
+                                   Height="350"
+                                   Source="{Binding CurrentImageSource}" />
+                        </StackPanel>
+
+                        <StackPanel x:Name="guesswordSP"
+                                    Width="450" 
+                                    Height="350" 
+                                    Margin="0,25,0,25"
+                                    ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{Binding AlphabetChars}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VariableSizedWrapGrid Orientation="Horizontal"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Command="{Binding ElementName=guesswordSP, Path=DataContext.TryLetterCommand}"
+                                                CommandParameter="{Binding}"
+                                                Width="70" 
+                                                Height="70"
+                                                FontSize="30"
+                                                Content="{Binding}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <Button Command="{Binding NewWordCommand}" 
+                            FontSize="20"
+                            HorizontalAlignment="Center" 
+                            Content="Нова дума" />
+                </StackPanel>
+
+                <VisualStateManager.VisualStateGroups>
+
+                    <!-- Visual states reflect the application's view state -->
+                    <VisualStateGroup x:Name="ApplicationViewStates">
+                        <VisualState x:Name="FullScreenLandscape"/>
+                        <VisualState x:Name="Filled"/>
+
+                        <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
+                        <VisualState x:Name="FullScreenPortrait">
+                            <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+
+                        <!-- The back button and title have different styles when snapped -->
+                        <VisualState x:Name="Snapped">
+                            <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                                </ObjectAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Grid>
+
+            <Grid x:Name="snapViewContent" 
+                  Visibility="Collapsed" 
+                  Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+                <Image Width="300" 
+                       Height="300" 
+                       Source="{Binding CurrentImageSource}" />
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</Page>
